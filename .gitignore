@@ -44,6 +44,8 @@ Desktop.ini
 *.zip
 *.tar.gz
 *.rar
+*.pkl
 /data/
+/Student folder
 ML_LAB_2026_Students_Share/
 create_notebook.py
