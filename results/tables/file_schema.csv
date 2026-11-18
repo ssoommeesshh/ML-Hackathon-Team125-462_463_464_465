@@ -1,0 +1,9 @@
+File Type,Delimiter,Col Index,Column Name,Data Type,Semantics / Range,Null Count,Sample Value
+.track,Whitespace,0,longitude,float64,"WGS84 degrees longitude [-180, 180]",0,8.595203
+.track,Whitespace,1,latitude,float64,"WGS84 degrees latitude [-90, 90]",0,49.844053
+.track,Whitespace,2,timestamp,float64,Relative seconds elapsed (~1 Hz sampling),0,1.000000
+.nodes,Whitespace,0,longitude,float64,Road node longitude; row index is 0-based node_id,0,8.581679
+.nodes,Whitespace,1,latitude,float64,Road node latitude; row index is 0-based node_id,0,49.857880
+.arcs,Whitespace,0,from_node_id,int64,0-based source node index; row index is 0-based arc_id,0,0
+.arcs,Whitespace,1,to_node_id,int64,0-based destination node index,0,281
+.route,Newline (1 val/line),0,arc_id,int64,Chronological sequence of ground-truth traversed arc_ids,0,2641

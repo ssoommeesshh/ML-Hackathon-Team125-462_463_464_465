@@ -1,0 +1,4 @@
+Partition,Trip Count,Verification Status,.track Files,.nodes Files,.arcs Files,.route Files,Total GPS Pts,Total Nodes,Total Arcs,Total Route Arcs,Size (MB)
+Training,80,Verified from files (80 dirs),80/80,80/80,80/80,80/80,"208,417","1,933,485","3,876,904","31,336",85.58
+Student Testing,10,Verified from files (10 dirs),10/10,10/10,10/10,10/10,"19,160","90,689","185,041","3,477",4.17
+Evaluator Testing,10,Documented count (Dataset Exploration.pdf §7; server-side),10/10 (Reserved),10/10 (Reserved),10/10 (Reserved),10/10 (Ground Truth),Reserved,Reserved,Reserved,Reserved,Reserved

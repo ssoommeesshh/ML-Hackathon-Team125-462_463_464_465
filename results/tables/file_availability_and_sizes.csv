@@ -1,0 +1,5 @@
+File Ext,Description,Train Avail,Train Size (Total),Train Size [Min - Max],Train Rows [Min - Max],Test Avail,Test Size (Total),Test Rows (Total)
+.track,"GPS trajectory observations (lon, lat, timestamp)",80/80 (100%),6711.3 KB,"11,566 B - 626,431 B","361 - 19,313 (Avg: 2605)",10/10 (100%),611.2 KB,"19,160"
+.nodes,"Road network node coordinates (lon, lat)",80/80 (100%),37530.9 KB,"5,681 B - 2,945,057 B","299 - 155,003 (Avg: 24169)",10/10 (100%),1779.5 KB,"90,689"
+.arcs,"Road network directed links (from_node, to_node)",80/80 (100%),43230.2 KB,"4,700 B - 3,856,964 B","649 - 307,392 (Avg: 48461)",10/10 (100%),1857.6 KB,"185,041"
+.route,Ground truth traversed sequence of arc_ids,80/80 (100%),161.8 KB,"253 B - 12,121 B","59 - 2,266 (Avg: 392)",10/10 (100%),17.9 KB,"3,477"
