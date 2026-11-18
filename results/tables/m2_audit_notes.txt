@@ -1,0 +1,6 @@
+Coordinate order: longitude, latitude, timestamp.
+Timestamp unit: seconds; nominal sampling rate: 1 Hz.
+Large-gap threshold: 10 seconds.
+Rationale: 10 seconds is ten times the nominal sampling interval and well above the observed p99.
+Positive gaps: n=227487, median=1 s, p99=3 s, max=153064 s.
+Trips audited: 90; flagged trips: 42.

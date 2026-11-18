@@ -100,3 +100,16 @@ Each trip directory contains exactly four whitespace-separated, headerless files
    ```bash
    jupyter notebook notebooks/01_m1_dataset_inventory.ipynb
    ```
+
+---
+
+## 🛰️ Milestone M2: GPS Observation Audit
+
+`notebooks/02_m2_gps_observation_audit.ipynb` audits all 80 training and 10 student-test `.track` files without modifying the raw observations. It checks malformed and invalid GPS rows, timestamp ordering, and sampling gaps, then writes the handoff artifacts below:
+
+- `results/tables/m2_per_trip_audit.csv` - one row per `(partition, trip_id)` with observation counts, validation counts, timestamp statistics, and flags.
+- `results/tables/m2_flagged_trips.csv` - only trips needing review, with the reason in `flags`.
+- `results/figures/m2_sampling_gap_histogram.png` - positive timestamp-gap distribution and the 10-second threshold.
+- `results/tables/m2_audit_notes.txt` - threshold rationale and aggregate findings.
+
+Run the notebook from the repository root or from `notebooks/`; it resolves the project root automatically. Raw data must be available in `Student folder/` alongside the repository before running it.
