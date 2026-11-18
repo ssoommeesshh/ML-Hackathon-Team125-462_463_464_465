@@ -4,6 +4,8 @@ The [model comparison results](docs/MODEL_COMPARISON_RESULTS.md) cover the five 
 
 The [ordered-route shallow MLP evaluation](docs/ORDERED_MLP_EVALUATION.md) documents the MLP run, its candidate-level confusion matrices, and the proxy-label limitations.
 
+> **Results caveat:** point labels are inferred from the supplied route, not observed GPS-to-arc annotations. The ordered-alignment audit identifies uncertain points, candidate misses, and trips with poor GPS-to-route agreement. Read the [alignment limitations](docs/ORDERED_ALIGNMENT.md#reporting-requirements) alongside any model score; the committed `model_comparison` figures use an earlier proxy and are exploratory until rerun on accepted ordered labels.
+
 **Team 125** | PES University — Department of Computer Science and Engineering  
 **Course:** UE24CS352A Machine Learning (2026)
 

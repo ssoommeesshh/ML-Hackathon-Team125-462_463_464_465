@@ -58,6 +58,19 @@ def main(data_root):
     fig.savefig(new/"alignment_examples.png",dpi=120)
     report=pd.DataFrame(rows)
     report.to_csv(new/"alignment_audit.csv",index=False)
+    summary = report.groupby("partition", as_index=False).agg(
+        points=("points", "sum"),
+        uncertain_points=("ambiguous", "sum"),
+        accepted_points=("clear", "sum"),
+        accepted_candidate_misses=("miss_clear", "sum"),
+        over_50m_points=("over_50m", "sum"),
+        labels_changed_from_nearest=("changed", "sum"),
+    )
+    summary["uncertain_rate"] = summary.uncertain_points / summary.points
+    summary["accepted_candidate_miss_rate"] = (
+        summary.accepted_candidate_misses / summary.accepted_points
+    )
+    summary.to_csv(new / "alignment_limitations_summary.csv", index=False)
     print(report.groupby("partition")[["points","clear","ambiguous","miss_clear","changed","over_50m","backward_steps"]].sum().to_string())
     print(report[report.trip_id.isin(examples)].to_string(index=False))
 

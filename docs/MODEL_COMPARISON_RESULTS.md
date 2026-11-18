@@ -1,6 +1,14 @@
 # Measured model comparison
 
-Scores are macro-averages over held-out trips. Top-1 uses the spatial proxy. Raw and decoded scores use the same candidates.
+## Scope and label-quality limitation
+
+The figures below are **legacy nearest-route proxy scores**, not accuracy against independently observed per-point ground truth. They were produced before the ordered-label audit and must not be interpreted as definitive map-matching accuracy. The ordered labels are also inferred from the supplied route, so they remain a useful training/evaluation proxy rather than a direct measurement of the vehicle's true position.
+
+The ordered alignment audit marks labels uncertain when the best alternative route arc changes the whole-trip cost by at most one unit, or when the assigned route arc is more than 50 m away. It found 40,775 / 208,417 training points (19.56%) and 2,545 / 19,160 student-test points (13.28%) uncertain. Of the accepted labels, 1,061 / 167,642 training points (0.63%) and 36 / 16,615 student-test points (0.22%) have no matching arc in the generated candidate set; no scorer can recover those points under the fixed shortlist. The full aggregate is in [the alignment-limitation summary](../results/ordered_pretraining/alignment_limitations_summary.csv) and per-trip evidence is in [the alignment audit](../results/ordered_pretraining/alignment_audit.csv).
+
+Weak GPS-to-route agreement is concentrated rather than uniform. Training trips `00000054` and `00000033` have median residuals of 142.1 m and 122.4 m respectively, with 17,240 and 3,440 points beyond the 50 m cutoff; their inferred point labels should be excluded from fitting and from any claim about model quality. Student-test trip `00000056` contains 27 such distant points, and trips `00000009`, `00000076`, and `00000077` have 18.7%–20.2% uncertain labels; trip `00000076` also has a reference-route discontinuity. Candidate misses must be counted as end-to-end failures, while uncertainty must be reported over all observations rather than dropped from the denominator.
+
+Scores are macro-averages over held-out trips. Top-1 uses the spatial proxy. Raw and decoded scores use the same candidates. Until this comparison is rerun on accepted ordered-label hits, its rankings are exploratory only.
 
 | Model | CV decoded | CV fold range | Student raw | Student decoded | Student decoded continuity | Student F1 (pooled) |
 |---|---:|---:|---:|---:|---:|---:|

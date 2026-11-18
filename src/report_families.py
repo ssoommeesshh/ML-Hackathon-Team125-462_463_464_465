@@ -57,8 +57,30 @@ plt.close(fig)
 def pct(x):
     return f"{100*x:.2f}%"
 
-lines=["# Measured model comparison","",
-       "Scores are macro-averages over held-out trips. Top-1 uses the spatial proxy. Raw and decoded scores use the same candidates.","",
+alignment = pd.read_csv(root / "results/ordered_pretraining/alignment_audit.csv")
+alignment_summary = alignment.groupby("partition")[["points", "ambiguous", "clear", "miss_clear", "over_50m"]].sum()
+train_alignment = alignment_summary.loc["train"]
+student_alignment = alignment_summary.loc["student_test"]
+worst = alignment.query("partition == 'train'").sort_values("over_50m", ascending=False).head(2)
+worst_text = "; ".join(
+    f"{row.trip_id} ({int(row.over_50m):,} points >50 m; median residual {row.median_m:.1f} m)"
+    for row in worst.itertuples()
+)
+
+lines=["# Measured model comparison", "", "## Scope and label-quality limitation", "",
+       "The figures below are **legacy nearest-route proxy scores**, not accuracy against independently observed per-point ground truth. "
+       "They were produced before the ordered-label audit and must not be interpreted as definitive map-matching accuracy. "
+       "The ordered labels are also inferred from the supplied route, so they remain a useful training/evaluation proxy rather than a direct measurement of the vehicle's true position.", "",
+       "The ordered alignment audit marks labels uncertain when the best alternative route arc changes the whole-trip cost by at most one unit, or when the assigned route arc is more than 50 m away. "
+       f"It found {int(train_alignment.ambiguous):,} / {int(train_alignment.points):,} training points ({pct(train_alignment.ambiguous/train_alignment.points)}) and "
+       f"{int(student_alignment.ambiguous):,} / {int(student_alignment.points):,} student-test points ({pct(student_alignment.ambiguous/student_alignment.points)}) uncertain. "
+       f"Of accepted labels, {int(train_alignment.miss_clear):,} / {int(train_alignment.clear):,} training points ({pct(train_alignment.miss_clear/train_alignment.clear)}) and "
+       f"{int(student_alignment.miss_clear):,} / {int(student_alignment.clear):,} student-test points ({pct(student_alignment.miss_clear/student_alignment.clear)}) have no matching arc in the generated candidate set; no scorer can recover those points under the fixed shortlist. "
+       "The full aggregate is in [the alignment-limitation summary](../results/ordered_pretraining/alignment_limitations_summary.csv) and per-trip evidence is in [the alignment audit](../results/ordered_pretraining/alignment_audit.csv).", "",
+       f"Weak GPS-to-route agreement is concentrated rather than uniform: {worst_text}. Their inferred point labels should be excluded from fitting and from any claim about model quality. "
+       "Candidate misses must be counted as end-to-end failures, while uncertainty must be reported over all observations rather than dropped from the denominator.", "",
+       "Scores are macro-averages over held-out trips. Top-1 uses the spatial proxy. Raw and decoded scores use the same candidates. "
+       "Until this comparison is rerun on accepted ordered-label hits, its rankings are exploratory only.", "",
        "| Model | CV decoded | CV fold range | Student raw | Student decoded | Student decoded continuity | Student F1 (pooled) |",
        "|---|---:|---:|---:|---:|---:|---:|"]
 for name,row in dev.iterrows():
