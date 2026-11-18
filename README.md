@@ -23,15 +23,33 @@ PathSnap is an end-to-end distributed machine learning system that reconstructs 
 │   ├── Dataset Exploration.pdf
 │   ├── Deliverables.pdf
 │   ├── Models and Training Guidelines.pdf
-│   └── Assessment and Plagiarism Policy.pdf
+│   ├── Assessment and Plagiarism Policy.pdf
+│   ├── MODEL_COMPARISON_RESULTS.md
+│   ├── MODEL_FAMILY_DECISIONS.md
+│   ├── ORDERED_ALIGNMENT.md
+│   ├── ORDERED_MLP_EVALUATION.md
+│   └── UI_GUIDE.md                     # Complete Laptop 2 UI & Distributed Deployment Guide
 ├── notebooks/                           # Step-by-step exploratory and experimentation notebooks
 │   ├── 01_m1_dataset_inventory.ipynb   # Executed M1 notebook with cell-wise outputs & plots
 │   ├── 02_m2_gps_observation_audit.ipynb # Executed M2 GPS track audit notebook
 │   └── 03_m3_road_network_analysis.ipynb # Executed M3 Road-network topological analysis notebook
 ├── src/                                 # Production source code
-│   └── data/
-│       ├── dataset_inventory.py         # Automated dataset verification & schema generator
-│       └── road_network_analysis.py     # Production road-network graph analyzer & visualizer
+│   ├── data/
+│   │   ├── dataset_inventory.py         # Automated dataset verification & schema generator
+│   │   ├── clean_tracks.py              # Conservative GPS track cleaner
+│   │   ├── road_network_analysis.py     # Production road-network graph analyzer & visualizer
+│   │   ├── prepare_candidates.py        # Candidate shortlist generation & spatial features
+│   │   └── audit_ordered.py             # Route alignment & candidate coverage auditor
+│   ├── evaluate_families.py             # Grouped CV & student-test evaluation across models
+│   ├── report_families.py               # Automated model comparison report generator
+│   └── ui/                              # Laptop 2 Evaluator User Interface (FastAPI + Leaflet)
+│       ├── app.py                       # Evaluator UI web server & API proxy
+│       ├── api_contract.py              # Pydantic contract between Laptop 1 & Laptop 2
+│       ├── mock_engine.py               # Standalone evaluation & map reconstruction engine
+│       └── static/                      # Modern single-page application dashboard
+│           ├── index.html               # Evaluator dashboard HTML
+│           ├── app.js                   # Interactive Leaflet map & API coordination
+│           └── style.css                # Polished glassmorphic dashboard styling
 ├── results/                             # Generated metrics, tables, and visualization artifacts
 │   ├── figures/
 │   │   ├── m1_inventory_distributions.png
@@ -40,7 +58,12 @@ PathSnap is an end-to-end distributed machine learning system that reconstructs 
 │   │   ├── m3_trip_overlay_and_ground_truth_00000000.png
 │   │   ├── m3_dataset_road_network_distributions.png
 │   │   ├── m3_folium_road_network_trip_00000000.html
-│   │   └── m3_folium_road_network_trip_00000076.html
+│   │   ├── m3_folium_road_network_trip_00000076.html
+│   │   ├── ui_evaluator_dashboard_screenshot.png # Evaluator UI interface screenshot
+│   │   └── ui_evaluator_trip_00000076_screenshot.png # Trip 76 evaluation screenshot
+│   ├── ordered_comparison/              # 5-fold CV & student-test metrics across 5 model families
+│   │   ├── comparison.csv               # Macro aggregate performance summary
+│   │   └── trip_metrics.csv             # Per-trip pointwise & sequence metrics
 │   └── tables/
 │       ├── trip_inventory.csv           # Partition-level inventory table
 │       ├── file_availability_and_sizes.csv # Detailed file availability & size metrics
@@ -213,13 +236,34 @@ esults/tables/m3_partition_comparison_table.csv (Train vs. Test aggregates)
   - 
 esults/tables/m3_road_network_notes.txt (Comprehensive analytical findings)
 - **Figures & Visualizations:**
-  - 
-esults/figures/m3_road_network_topology_00000000.png (4-panel graph structural decomposition)
-  - 
-esults/figures/m3_trip_overlay_and_ground_truth_00000000.png (Trajectory overlay with GPS noise & ground truth)
-  - 
-esults/figures/m3_dataset_road_network_distributions.png (Dataset-wide distributions)
-  - 
-esults/figures/m3_folium_road_network_trip_00000000.html (Interactive Folium GIS map with Esri base tiles)
-  - 
-esults/figures/m3_folium_road_network_trip_00000076.html (Interactive Folium GIS map for Trip 76)
+  - `results/figures/m3_road_network_topology_00000000.png` (4-panel graph structural decomposition)
+  - `results/figures/m3_trip_overlay_and_ground_truth_00000000.png` (Trajectory overlay with GPS noise & ground truth)
+  - `results/figures/m3_dataset_road_network_distributions.png` (Dataset-wide distributions)
+  - `results/figures/m3_folium_road_network_trip_00000000.html` (Interactive Folium GIS map with Esri base tiles)
+  - `results/figures/m3_folium_road_network_trip_00000076.html` (Interactive Folium GIS map for Trip 76)
+
+---
+
+## 🖥️ Milestone M7: Laptop 2 Evaluator User Interface & Distributed Deployment
+
+Per **Main Guidelines.pdf §3 & §10** and **Deliverables.pdf §7**, PathSnap provides a dedicated evaluator interface running on **Laptop 2** that communicates over HTTP REST with the model server on **Laptop 1**.
+
+### 🌟 Key Features
+- **10 Reserved Evaluation Trips**: Dedicated grid buttons to instantly evaluate any of the 10 student-test trips (`00000000`, `00000007`, `00000009`, `00000040`, `00000052`, `00000056`, `00000065`, `00000076`, `00000077`, `00000091`) + support for custom evaluator trip IDs.
+- **Multi-Layer Leaflet Cartography**: High-performance interactive map displaying raw GPS observations (blue dots), HMM-reconstructed vehicle path (purple), ground truth reference trajectory (green), and road network geometry (grey) with auto-centering and zoom controls.
+- **Real-Time Quantitative Metrics**: Observation-level Decoded Top-1 Accuracy, Route Continuity (topological coherence), Macro-F1, Log Loss, and Server Inference Latency (ms).
+- **Dual Operating Modes**:
+  1. **Live Distributed API Mode**: Sends evaluation requests across the LAN to Laptop 1 (`POST /evaluate/{trip_id}`).
+  2. **Offline Demonstration / Mock Engine**: Automatically falls back to local data loading, trajectory reconstruction, and measured benchmark scores when Laptop 1 is offline or during testing.
+- **Live Terminal & API Inspector**: Real-time HTTP log console displaying timestamps, request endpoints, response status codes (`200 OK`), round-trip latency, and pretty-printed JSON payloads (fulfills requirement to show API logs to the evaluator).
+- **GeoJSON Export**: One-click download of the reconstructed vehicle path and ground truth as standardized GeoJSON.
+
+### 🚀 Running the Evaluator UI (Laptop 2)
+```bash
+# Launch UI server on Laptop 2 pointing to Laptop 1
+python -m src.ui.app --port 8501 --api-url http://<laptop-1-ip>:8000
+```
+Then navigate to `http://localhost:8501` in your browser.
+
+For complete network connection instructions, firewall configuration, and the Laptop 1 API contract, read the [UI and Deployment Guide](docs/UI_GUIDE.md).
+
