@@ -1,5 +1,7 @@
 # PathSnap: Distributed Map-Matching & Route Reconstruction
 
+The [model comparison results](docs/MODEL_COMPARISON_RESULTS.md) cover the five team-owned families and the nearest-segment baseline. The [experiment decisions and reproduction commands](docs/MODEL_FAMILY_DECISIONS.md) describe the grouped folds, feature analysis, sequence decoder and reasons for deferring other families.
+
 **Team 125** | PES University — Department of Computer Science and Engineering  
 **Course:** UE24CS352A Machine Learning (2026)
 
@@ -98,7 +100,7 @@ Each trip directory contains exactly four whitespace-separated, headerless files
 - **Missing Values**: Exactly **0** null, NaN, or corrupted values across all 227,577 GPS rows, 2,024,174 nodes, and 4,061,945 arcs.
 - **Sampling Frequency**: **94.32%** of successive GPS timestamps have an exact $\Delta t = 1.0\text{ s}$, confirming a nominal 1 Hz sampling rate. Trips with $\Delta t > 1\text{ s}$ represent GPS dropouts that will be handled via transition probabilities in the HMM.
 - **Topological Integrity**: 100% of `from_node_id` and `to_node_id` values in `.arcs` point to valid 0-based row indices in `.nodes`. 100% of `arc_id` values in `.route` point to valid rows in `.arcs`.
-- **Geographical Extent**: Bounding box coordinates center around Darmstadt/Hesse, Germany (Longitude $\approx 8.58^\circ\text{--}8.62^\circ$, Latitude $\approx 49.84^\circ\text{--}49.88^\circ$). Calculations will use Haversine geodesic distance or UTM Zone 32N projection.
+- **Geographical Extent**: Trips span multiple regions (longitude -100.418538 to 137.237029; latitude -34.640291 to 61.699590). Geographic calculations use Haversine/geodesic distance; a planar projection, when required, must be selected per trip rather than using one dataset-wide UTM zone.
 
 ---
 
