@@ -1,0 +1,3 @@
+partition,trip_count,gps_backed_trips,route_backed_trips,invalid_route_arc_ids,invalid_arc_node_references,missing_file_trips
+train,80,80,80,0,0,0
+student_test,10,10,10,0,0,0
