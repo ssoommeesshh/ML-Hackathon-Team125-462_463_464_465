@@ -1,0 +1,5 @@
+Cleaning policy: raw files are unchanged; no mean/median/interpolation imputation is used.
+Rows are dropped only for malformed fields, invalid numeric values, invalid coordinates, invalid timestamps, or exact duplicate observations.
+A new segment begins after an invalid row, repeated/backward timestamp, or a timestamp gap over 10 seconds.
+Speeds above 180 km/h are flagged for review only; they are not automatically removed.
+Trips processed: 90; retained points: 227577; dropped rows: 0; segments: 707.

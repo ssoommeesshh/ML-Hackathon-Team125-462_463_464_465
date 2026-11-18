@@ -129,6 +129,18 @@ Each trip directory contains exactly four whitespace-separated, headerless files
 
 Run the notebook from the repository root or from `notebooks/`; it resolves the project root automatically. Raw data must be available in `Student folder/` alongside the repository before running it.
 
+---
+
+## 🧹 GPS Track Cleaning
+
+`src/data/clean_tracks.py` and `notebooks/04_track_cleaning.ipynb` implement conservative GPS cleaning across the training and student-test partitions. Raw `.track` files are never modified and no mean, median, forward-fill, or interpolation is used for geographic coordinates or timestamps.
+
+- Invalid rows and exact duplicate observations are removed only when encountered and are recorded in `results/tables/dropped_gps_rows.csv`.
+- Valid observations retain their original file order and receive a `segment_id`; a new segment begins after an invalid row, repeated/backward timestamp, or time gap over 10 seconds.
+- Implied speeds above 180 km/h are flagged for review, not automatically removed.
+
+The committed run retained all 227,577 valid GPS points, removed zero rows, and produced 707 usable segments. The complete cleaned-point table, trip summary, segment summary, policy note, and segment-length distribution are in `results/`.
+
 
 ---
 
