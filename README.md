@@ -2,6 +2,8 @@
 
 The [model comparison results](docs/MODEL_COMPARISON_RESULTS.md) cover the five team-owned families and the nearest-segment baseline. The [experiment decisions and reproduction commands](docs/MODEL_FAMILY_DECISIONS.md) describe the grouped folds, feature analysis, sequence decoder and reasons for deferring other families.
 
+The [ordered-route shallow MLP evaluation](docs/ORDERED_MLP_EVALUATION.md) documents the MLP run, its candidate-level confusion matrices, and the proxy-label limitations.
+
 **Team 125** | PES University — Department of Computer Science and Engineering  
 **Course:** UE24CS352A Machine Learning (2026)
 
