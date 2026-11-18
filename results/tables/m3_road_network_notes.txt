@@ -1,0 +1,28 @@
+PathSnap - Milestone M3: Road-Network Analysis Notes
+Team 125 | PES University Machine Learning Hackathon (2026)
+
+1. SCALE & DENSITY
+- Inspected 90 road networks (80 Train + 10 Student-Test).
+- Total road vertices across dataset: 2,024,174
+- Total road directed arcs across dataset: 4,061,945
+- Edge-to-node ratio (|E|/|V|) is remarkably stable at 2.02 ± 0.13 (Train) and 2.04 ± 0.10 (Test), reflecting planar road graphs with bidirectional arc pairs.
+
+2. CONNECTIVITY & GIANT COMPONENT DOMINATION
+- Road networks are NOT single connected graphs. Every trip contains disconnected sub-graphs/islands.
+- Average connected components per trip: 39.01 (Train), 22.70 (Test).
+- Giant Component covers 96.90% of nodes in Train and 96.39% of nodes in Student-Test.
+- Sub-islands consist of 2 to 20 nodes representing residential compounds, footpaths, or service lanes.
+
+3. ISOLATED NODES & EDGE CASES
+- Zero isolated vertices (degree = 0) in 89/90 trips.
+- Edge case: Trip 00000035 (Train) features Node 18927 with 2 self-loops to itself and 0 edges to any other node (size-1 component).
+- Multi-edges (parallel arcs) exist in 60/90 trips (max 322 in Trip 00000078), corresponding to dual carriageways / lane-level geometry.
+
+4. GROUND-TRUTH ROUTE ALIGNMENT
+- In 100% of trips, the vehicle ground-truth route resides strictly inside the Giant Component.
+- 79 trips exhibit 100.0% strict continuity (to_node of arc t equals from_node of arc t+1).
+- 11 trips (including Student-Test Trip 00000076) have minor reference route discontinuities (98.13% to 99.73%), confirming physical artifacts in the raw reference paths.
+
+5. DOWNSTREAM IMPACT ON HMM / VITERBI
+- Candidate Projection: Spatial candidate generation MUST filter out arcs on disconnected sub-islands to prevent transition probability collapse (P = 0).
+- Multi-Edge Resolution: Heading/bearing features are required to resolve parallel arcs.
