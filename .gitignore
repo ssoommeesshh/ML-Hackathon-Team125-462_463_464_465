@@ -49,3 +49,6 @@ Desktop.ini
 /Student folder
 ML_LAB_2026_Students_Share/
 create_notebook.py
+
+# Matplotlib cache
+.matplotlib/
